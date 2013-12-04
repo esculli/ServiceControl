@@ -5,10 +5,6 @@ namespace ServiceBus.Management.MessageAuditing
 
     public class EndpointDetails
     {
-        public EndpointDetails()
-        {
-            
-        }
 
         public string Name { get; set; }
 
@@ -25,7 +21,7 @@ namespace ServiceBus.Management.MessageAuditing
                 return endpointDetails;
             }
 
-            Address address = Address.Undefined; 
+            var address = Address.Undefined; 
             DictionaryExtensions.CheckIfKeyExists(Headers.OriginatingAddress, headers, s => address = Address.Parse(s));
 
             if (address != Address.Undefined)

@@ -4,6 +4,7 @@
 
     public class EndpointHeartbeat
     {
+
         public DateTime ExecutedAt { get; set; }
     }
 }

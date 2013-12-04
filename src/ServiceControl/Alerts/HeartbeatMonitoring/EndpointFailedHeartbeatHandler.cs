@@ -24,7 +24,10 @@
                     Description =
                         "Endpoint has failed to send expected heartbeat to ServiceControl. It is possible that the endpoint could be down or is unresponsive. If this condition persists, you might want to restart your endpoint.",
                     Category = Category.HeartbeatFailure,
-                    RelatedTo = new List<string>(){string.Format("endpoint/{0}/{1}",message.Endpoint, message.Machine)}
+                    RelatedTo = new List<string>
+                        {
+                            string.Format("endpoint/{0}/{1}",message.Endpoint, message.Machine)
+                        }
                 };
 
                 session.Store(alert);
