@@ -2,7 +2,7 @@
 {
     using System;
     using NServiceBus;
-    using ServiceControl.Contracts.BusinessMonitoring;
+    using Contracts.BusinessMonitoring;
 
     public class EndpointSLABreachedHandler : IHandleMessages<EndpointSLABreached>
     {

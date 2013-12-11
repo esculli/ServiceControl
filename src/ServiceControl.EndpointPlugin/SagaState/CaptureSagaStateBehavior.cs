@@ -24,7 +24,6 @@
         void AuditSaga(ISaga saga, HandlerInvocationContext context)
         {
             var activeSagaInstance = context.Get<ActiveSagaInstance>();
-            var transportMessage = context.PhysicalMessage;
             var sagaStateString = Serializer.Serialize(saga.Entity);
             var sagaAudit = new ReportSagaStateChange
                 {
@@ -33,14 +32,15 @@
                     SagaId = saga.Entity.Id,
                     IsNew = activeSagaInstance.IsNew,
                     InitiatingMessage = new SagaChangeInitiatingMessage
-                        {
-                            InitiatingMessageId = transportMessage.Id,
-                            OriginatingMachine = context.PhysicalMessage.Headers[Headers.OriginatingMachine],
-                            OriginatingEndpoint = context.PhysicalMessage.Headers[Headers.OriginatingEndpoint],
+                    {
+                        //TODO: what happens when we have an in memory send and no physical messgae?
+                            InitiatingMessageId = context.PhysicalMessage.Id,
+                            OriginatingMachine = context.LogicalMessage.Headers[Headers.OriginatingMachine],
+                            OriginatingEndpoint = context.LogicalMessage.Headers[Headers.OriginatingEndpoint],
                             MessageType = context.LogicalMessage.GetType().Name,
-                            TimeSent = context.PhysicalMessage.Headers[Headers.TimeSent],
-                            ProcessingStarted = context.PhysicalMessage.Headers[Headers.ProcessingStarted],
-                            ProcessingEnded = context.PhysicalMessage.Headers[Headers.ProcessingEnded],
+                            TimeSent = context.LogicalMessage.Headers[Headers.TimeSent],
+                            ProcessingStarted = context.LogicalMessage.Headers[Headers.ProcessingStarted],
+                            ProcessingEnded = context.LogicalMessage.Headers[Headers.ProcessingEnded],
                         },
                   
                 };

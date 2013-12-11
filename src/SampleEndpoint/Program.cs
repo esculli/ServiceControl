@@ -1,7 +1,7 @@
 ﻿using System;
-
     using NServiceBus;
-using NServiceBus.Saga;
+using NServiceBus.Features;
+using NServiceBus.Installation.Environments;
 
 class Program
 {
@@ -9,26 +9,20 @@ class Program
     {
         Configure.Serialization.Json();
 
+        Feature.Enable<Sagas>();
         using (var bus = Configure.With()
             .DefaultBuilder()
-            .InMemorySagaPersister()
-            .InMemoryFaultManagement()
+            .RavenPersistence()
             .UnicastBus()
             .CreateBus())
         {
-            bus.Start();
+            bus.Start(() => Configure.Instance.ForInstallationOn<Windows>().Install());
+            bus.SendLocal(new MyMessage
+            {
+                SomeId = Guid.NewGuid()
+            });
         }
         Console.WriteLine("\r\nPress any key to stop program\r\n");
         Console.Read();
     }
-}
-
-public class MySaga:Saga<MySagaData>
-{}
-
-public class MySagaData : IContainSagaData
-{
-    public Guid Id { get; set; }
-    public string Originator { get; set; }
-    public string OriginalMessageId { get; set; }
 }
